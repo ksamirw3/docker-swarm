@@ -3,11 +3,11 @@ version: '3'
 services:
 
   node-app:
-    image: aalisharp/swarm-session:1.0.0
+    image: ksamir/my-swarm:01
     networks:
       - sharp-net
     deploy:
-      replicas: 3
+      replicas: 1
       update_config:
         parallelism: 1
         delay: 10s
