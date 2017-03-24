@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+
+  node-app:
+    image: aalisharp/swarm-session:1.0.0
+    networks:
+      - sharp-net
+    deploy:
+      replicas: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - mongo-data
+    ports:
+      - "8080:8080"
+    environment:
+      - MONGO_URL=mongodb://mongo-data:27017/sharp-date
+
+  mongo-data:
+    image: mongo:3.0
+    networks:
+      - sharp-net
+    volumes:
+      - mongodata:/data/db
+      - mongoconfig:/data/configdb
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    ports:
+      - "27017:27017"
+
+networks:
+  sharp-net:
+    driver: overlay
+
+volumes:
+  mongodata:
+    driver: local
+  mongoconfig:
+    driver: local
